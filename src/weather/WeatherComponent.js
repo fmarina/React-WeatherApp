@@ -8,23 +8,35 @@ const api = {
     url: "api.openweathermap.org/data/2.5/weather?q="
 }
 
+const days = [
+    "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
+];
+const months = [
+    "January", "Fabruary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
+];
+
 const Weather = (props) => {
 
     const [value, setValue] = useState("");
     const [weather, setWeather] = useState({});
 
+    const date = new Date();    
+    const day = days[date.getDay()];
+    const month = months[date.getMonth()];
+    const number = date.getDate();    
+    const year = date.getFullYear();
+
     const handleKeyPress = (event) => {
         if(event.key === "Enter") {
-
-            fetch(`http://${api.url}${value}&appid=${api.key}`)
+            fetch(`http://${api.url}${value}&units=metric&appid=${api.key}`)
             .then(response => response.json())
             .then(result => {
-                console.log(result);
-                setWeather(result);
+                setWeather(result);   
+                console.log(result);             
                 setValue("");
-            });
+            })
         }
-    }
+    }   
     
     return (
         <div className="form-container">
@@ -36,17 +48,38 @@ const Weather = (props) => {
                 onChange={event => setValue(event.target.value)}
                 onKeyPress={handleKeyPress}
             />
-
-            <div className="card-weather">
-                <label>Monday, 27th April</label>
-                <label>6:27am</label>
-                <h2>London</h2>
+        
+        {
+          (typeof weather.main !== "undefined")
+          ?          
+            <div 
+                className="card-weather"
+                style={  
+                        weather.weather[0].main == "Rain"
+                        ? {backgroundColor : "#3d4874"}
+                        : weather.weather[0].main == "Clear"
+                        ? {backgroundColor : "#f5b87f"}
+                        : {backgroundColor: "#5ab5d2"}
+                }
+            >
+                <label>{day}, {number} {month} {year} </label>
+                <h2>{weather.name} {weather.sys.country}</h2>
                 <div className="img-weather">
-                    <img src={cloudy} alt="logo"></img>
-                </div>
-                <h1>10°C</h1>
+                {
+                    weather.weather[0].main == "Rain"
+                    ? <img src={rainy} alt="logo"></img>
+                    : weather.weather[0].main == "Clouds"
+                    ? <img src={cloudy} alt="logo"></img>
+                    : <img src={sunny} alt="logo"></img>
                 
-            </div>
+                }
+
+                    
+                </div>
+                <h1>{weather.main.temp}°C</h1>
+            </div> 
+        : ""
+        }           
         </div>
 
     );
