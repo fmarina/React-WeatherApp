@@ -30,7 +30,7 @@ const Weather = () => {
 
     const handleKeyPress = (event) => {
         if(event.key === "Enter") {
-            fetch(`http://${api.url}${value}&units=metric&appid=${api.key}`)
+            fetch(`https://${api.url}${value}&units=metric&appid=${api.key}`)
             .then(response => response.json())
             .then(result => {
                 setWeather(result);               
