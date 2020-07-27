@@ -4,7 +4,7 @@ import sunny from '../assets/images/sunny.png';
 import rainy from '../assets/images/rainy.png';
 
 const api = {
-    key: "2461ad88218bfad4cb98068a09c702e8",
+    key: process.env.REACT_APP_API_KEY,
     url: "api.openweathermap.org/data/2.5/weather?q="
 }
 
